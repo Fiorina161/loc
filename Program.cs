@@ -21,7 +21,8 @@ internal static class Program
 
         var padding = newStats.Keys.Select(x => x.Length).Max();
 
-        var report = new ReportWriter(Statistics.Load(dir), padding);
+        var oldStats = Statistics.Load(dir);
+		var report = new ReportWriter(oldStats, padding);
 
         foreach (var (filename, lineCount) in newStats.OrderByDescending(x => x.Value))
             report.Write(filename, lineCount);
