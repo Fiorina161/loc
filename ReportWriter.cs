@@ -2,33 +2,33 @@
 
 internal class ReportWriter
 {
-    private readonly Statistics _oldStats;
+    private readonly FileStats _previousStats;
     private readonly int _padding;
     private int _totalValue;
     private int _totalDelta;
 
 
-    public ReportWriter(Statistics oldStats, int padding)
+    public ReportWriter(FileStats previousStats, int padding)
     {
-        _oldStats = oldStats;
+        _previousStats = previousStats;
         _padding = padding;
     }
 
-    public void Write(string filename, int value)
+    public void WriteLine(string label, int currentValue)
     {
-        var oldValue = _oldStats.GetValueOrDefault(filename, 0);
-        var delta = value - oldValue;
+        var previousValue = _previousStats.GetValueOrDefault(label, 0);
+        var delta = currentValue - previousValue;
 
-        _totalValue += value;
+        _totalValue += currentValue;
         _totalDelta += delta;
 
-        Console.Write($"{filename.PadRight(_padding)} {value,5}");
+        Console.Write($"{label.PadRight(_padding)} {currentValue,5}");
 
         SetDeltaColor(delta);
 
-        if (oldValue == 0)
-            Console.WriteLine(" *new file*");
-        else if (value != oldValue)
+        if (previousValue == 0)
+            Console.WriteLine(" *new*");
+        else if (currentValue != previousValue)
             Console.WriteLine($" {delta:+#;-#}");
         else
             Console.WriteLine();
@@ -41,7 +41,7 @@ internal class ReportWriter
         Console.Write($"{"Total".PadLeft(_padding)} {_totalValue,5}");
 
         SetDeltaColor(_totalDelta);
-        
+
         if (_totalDelta != 0)
             Console.WriteLine($" {_totalDelta:+#;-#}");
         else
@@ -50,11 +50,13 @@ internal class ReportWriter
         Console.ResetColor();
     }
 
-    private void SetDeltaColor(int delta)
+    private static void SetDeltaColor(int delta)
     {
         if (delta > 0)
             Console.ForegroundColor = ConsoleColor.Red;
         else if (delta < 0)
             Console.ForegroundColor = ConsoleColor.Green;
+        else
+            Console.ResetColor();
     }
 }
