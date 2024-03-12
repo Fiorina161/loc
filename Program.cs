@@ -12,23 +12,23 @@ internal static class Program
             return;
         }
 
-        var newStats = Statistics.Scan(dir);
-        if (newStats.Count == 0)
+        var currentStats = FileStats.Scan(dir);
+        if (currentStats.Count == 0)
         {
             Console.WriteLine("No source files found");
             return;
         }
 
-        var padding = newStats.Keys.Select(x => x.Length).Max();
+        var padding = currentStats.Select(kvp => kvp.Key.Length).Max();
 
-        var oldStats = Statistics.Load(dir);
-		var report = new ReportWriter(oldStats, padding);
+        var previousStats = FileStats.Load(dir);
+        var report = new ReportWriter(previousStats, padding);
 
-        foreach (var (filename, lineCount) in newStats.OrderByDescending(x => x.Value))
-            report.Write(filename, lineCount);
+        foreach (var (filename, lineCount) in currentStats.OrderByDescending(x => x.Value))
+            report.WriteLine(filename, lineCount);
 
         report.WriteTotal();
 
-        newStats.Save(dir);
+        currentStats.Save(dir);
     }
 }
