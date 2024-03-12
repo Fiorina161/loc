@@ -10,6 +10,7 @@ internal class Statistics : Dictionary<string, int>
     private static readonly Dictionary<string, Func<string, bool>> _commentPatterns = new()
     {
         [".cs"] = s => s.StartsWith("/") || s.StartsWith("*"),
+        [".php"] = s => s.StartsWith("/") || s.StartsWith("*") || s.StartsWith("#"),
         [".vb"] = s => s.StartsWith("'")
     };
 
