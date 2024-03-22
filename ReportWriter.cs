@@ -6,6 +6,7 @@ internal class ReportWriter
     private readonly int _padding;
     private int _totalValue;
     private int _totalDelta;
+    private int _count;
 
 
     public ReportWriter(FileStats previousStats, int padding)
@@ -16,6 +17,7 @@ internal class ReportWriter
 
     public void WriteLine(string label, int currentValue)
     {
+        _count++;
         var previousValue = _previousStats.GetValueOrDefault(label, 0);
         var delta = currentValue - previousValue;
 
@@ -38,7 +40,7 @@ internal class ReportWriter
 
     public void WriteTotal()
     {
-        Console.Write($"{"Total".PadLeft(_padding)} {_totalValue,5}");
+        Console.Write($"{"total lines".PadLeft(_padding)} {_totalValue,5} ({_count} files)");
 
         SetDeltaColor(_totalDelta);
 
