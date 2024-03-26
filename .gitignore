@@ -4,3 +4,4 @@
 /obj
 /Properties/PublishProfiles
 *.user
+.loc
